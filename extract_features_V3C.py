@@ -55,7 +55,7 @@ if __name__ == '__main__':
     imgs_root = '/mnt/sda/tmp'
     dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
                       mode=mode, transforms=test_transforms)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=8,
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
                                              pin_memory=True)
 
     if mode == 'flow':

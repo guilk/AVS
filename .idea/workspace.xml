@@ -14,14 +14,14 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.23083404">
+    <splitter split-orientation="horizontal" split-proportion="0.59309185">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="extract_features_V3C.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1110">
-                  <caret line="74" column="16" lean-forward="false" selection-start-line="74" selection-start-column="16" selection-end-line="74" selection-end-column="16" />
+                <state relative-caret-position="405">
+                  <caret line="57" column="104" lean-forward="false" selection-start-line="57" selection-start-column="104" selection-end-line="57" selection-end-column="104" />
                   <folding />
                 </state>
               </provider>
@@ -75,8 +75,8 @@
         <option value="$PROJECT_DIR$/test_opencv.py" />
         <option value="$PROJECT_DIR$/charades_dataset_full.py" />
         <option value="$PROJECT_DIR$/collect_dataset.py" />
-        <option value="$PROJECT_DIR$/extract_features_V3C.py" />
         <option value="$PROJECT_DIR$/V3C_dataset.py" />
+        <option value="$PROJECT_DIR$/extract_features_V3C.py" />
       </list>
     </option>
   </component>
@@ -409,14 +409,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1110">
-          <caret line="74" column="16" lean-forward="false" selection-start-line="74" selection-start-column="16" selection-end-line="74" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -424,6 +416,14 @@
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="57" column="104" lean-forward="false" selection-start-line="57" selection-start-column="104" selection-end-line="57" selection-end-column="104" />
+          <folding />
         </state>
       </provider>
     </entry>
