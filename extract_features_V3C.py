@@ -19,7 +19,7 @@ parser.add_argument('--video_lst', type=str)
 # parser.add_argument()
 
 args = parser.parse_args()
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+# os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
 import torch
 import torch.nn as nn
