@@ -70,9 +70,10 @@ if __name__ == '__main__':
     i3d.eval()
 
     for index, imgs in enumerate(dataloader):
+        print imgs.size()
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
-        print inputs.size(), features.size()
+        print features.size()
     #     # assert False
     #     # print imgs.size()
     # # assert False
