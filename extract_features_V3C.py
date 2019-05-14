@@ -70,9 +70,12 @@ if __name__ == '__main__':
     i3d.eval()
 
     for index, imgs in enumerate(dataloader):
-        imgs = imgs.to(device)
-        print imgs.size()
-    assert False
+        inputs = imgs.to(device)
+        features = i3d.extract_features(inputs)
+        print inputs.size(), features.size()
+        assert False
+        # print imgs.size()
+    # assert False
     for phase in ['train', 'val']:
         i3d.train(False)  # Set model to evaluate mode
 

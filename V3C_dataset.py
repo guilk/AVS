@@ -149,7 +149,7 @@ class V3C(data_utl.Dataset):
         img_folder_path = os.path.join(self.imgs_root, video_name)
         if not os.path.exists(img_folder_path):
             os.makedirs(img_folder_path)
-        cmd = 'ffmpeg -i {} {}'.format(video_path, os.path.join(img_folder_path, '%06d.jpg'))
+        cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path, os.path.join(img_folder_path, '%06d.jpg'))
         os.system(cmd)
 
         num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))

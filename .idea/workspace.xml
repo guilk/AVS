@@ -14,14 +14,14 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.59309185">
+    <splitter split-orientation="horizontal" split-proportion="0.5408593">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="extract_features_V3C.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="405">
-                  <caret line="57" column="104" lean-forward="false" selection-start-line="57" selection-start-column="104" selection-end-line="57" selection-end-column="104" />
+                <state relative-caret-position="307">
+                  <caret line="78" column="18" lean-forward="false" selection-start-line="78" selection-start-column="18" selection-end-line="78" selection-end-column="18" />
                   <folding />
                 </state>
               </provider>
@@ -30,8 +30,8 @@
           <file leaf-file-name="pytorch_i3d.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pytorch_i3d.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="4905">
-                  <caret line="336" column="30" lean-forward="false" selection-start-line="336" selection-start-column="30" selection-end-line="336" selection-end-column="30" />
+                <state relative-caret-position="2662">
+                  <caret line="336" column="39" lean-forward="false" selection-start-line="336" selection-start-column="39" selection-end-line="336" selection-end-column="39" />
                   <folding />
                 </state>
               </provider>
@@ -44,8 +44,8 @@
           <file leaf-file-name="V3C_dataset.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="247">
-                  <caret line="31" column="54" lean-forward="false" selection-start-line="31" selection-start-column="54" selection-end-line="31" selection-end-column="54" />
+                <state relative-caret-position="472">
+                  <caret line="151" column="59" lean-forward="false" selection-start-line="151" selection-start-column="59" selection-end-line="151" selection-end-column="59" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
                   </folding>
@@ -75,8 +75,8 @@
         <option value="$PROJECT_DIR$/test_opencv.py" />
         <option value="$PROJECT_DIR$/charades_dataset_full.py" />
         <option value="$PROJECT_DIR$/collect_dataset.py" />
-        <option value="$PROJECT_DIR$/V3C_dataset.py" />
         <option value="$PROJECT_DIR$/extract_features_V3C.py" />
+        <option value="$PROJECT_DIR$/V3C_dataset.py" />
       </list>
     </option>
   </component>
@@ -373,6 +373,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -393,14 +396,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pytorch_i3d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4905">
-          <caret line="336" column="30" lean-forward="false" selection-start-line="336" selection-start-column="30" selection-end-line="336" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/extract_features.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
@@ -409,21 +404,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
+    <entry file="file://$PROJECT_DIR$/pytorch_i3d.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="31" column="54" lean-forward="false" selection-start-line="31" selection-start-column="54" selection-end-line="31" selection-end-column="54" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="2662">
+          <caret line="336" column="39" lean-forward="false" selection-start-line="336" selection-start-column="39" selection-end-line="336" selection-end-column="39" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="57" column="104" lean-forward="false" selection-start-line="57" selection-start-column="104" selection-end-line="57" selection-end-column="104" />
+        <state relative-caret-position="307">
+          <caret line="78" column="18" lean-forward="false" selection-start-line="78" selection-start-column="18" selection-end-line="78" selection-end-column="18" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="472">
+          <caret line="151" column="59" lean-forward="false" selection-start-line="151" selection-start-column="59" selection-end-line="151" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
