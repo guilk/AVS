@@ -29,7 +29,7 @@ def video_to_tensor(pic):
 def load_rgb_frames(image_dir, vid, start, num):
     frames = []
     for i in range(start, start + num):
-        img = cv2.imread(os.path.join(image_dir, vid, vid + '-' + str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+        img = cv2.imread(os.path.join(image_dir, vid, str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
         w, h, c = img.shape
         if w < 226 or h < 226:
             d = 226. - min(w, h)
