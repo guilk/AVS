@@ -146,8 +146,10 @@ class V3C(data_utl.Dataset):
         video_name = video_path.split('/')[-1]
         # subfolder_name = video_path.split('/')[-2]
 
-        img_folder_path = os.path.join(self.imgs_root, video_name, '%06d.jpg')
-        cmd = 'ffmpeg -i {} {}'.format(video_path, img_folder_path)
+        img_folder_path = os.path.join(self.imgs_root, video_name)
+        if os.path.exists(img_folder_path):
+            os.makedirs(img_folder_path)
+        cmd = 'ffmpeg -i {} {}'.format(video_path, os.path.join(img_folder_path, '%06d.jpg'))
         os.system(cmd)
 
         num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
@@ -157,7 +159,7 @@ class V3C(data_utl.Dataset):
             imgs = load_flow_frames(self.imgs_root, video_name, 1, num_frames)
         imgs = self.transforms(imgs)
 
-        cmd = 'rm -rf {}'.format(os.path.join(self.imgs_root, video_name))
+        cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
         return video_to_tensor(imgs)
