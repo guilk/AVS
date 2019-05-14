@@ -147,11 +147,10 @@ class V3C(data_utl.Dataset):
         # subfolder_name = video_path.split('/')[-2]
 
         img_folder_path = os.path.join(self.imgs_root, video_name)
-        if os.path.exists(img_folder_path):
+        if not os.path.exists(img_folder_path):
             os.makedirs(img_folder_path)
         cmd = 'ffmpeg -i {} {}'.format(video_path, os.path.join(img_folder_path, '%06d.jpg'))
         os.system(cmd)
-        assert False
 
         num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
         if self.mode == 'rgb':
