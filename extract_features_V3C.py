@@ -73,34 +73,34 @@ if __name__ == '__main__':
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
         print inputs.size(), features.size()
-        assert False
-        # print imgs.size()
-    # assert False
-    for phase in ['train', 'val']:
-        i3d.train(False)  # Set model to evaluate mode
-
-        tot_loss = 0.0
-        tot_loc_loss = 0.0
-        tot_cls_loss = 0.0
-
-        # Iterate over data.
-        for data in dataloaders[phase]:
-            # get the inputs
-            inputs, labels, name = data
-            if os.path.exists(os.path.join(save_dir, name[0] + '.npy')):
-                continue
-
-            b, c, t, h, w = inputs.shape
-            if t > 1600:
-                features = []
-                for start in range(1, t - 56, 1600):
-                    end = min(t - 1, start + 1600 + 56)
-                    start = max(1, start - 48)
-                    ip = Variable(torch.from_numpy(inputs.numpy()[:, :, start:end]).cuda(), volatile=True)
-                    features.append(i3d.extract_features(ip).squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy())
-                np.save(os.path.join(save_dir, name[0]), np.concatenate(features, axis=0))
-            else:
-                # wrap them in Variable
-                inputs = Variable(inputs.cuda(), volatile=True)
-                features = i3d.extract_features(inputs)
-                np.save(os.path.join(save_dir, name[0]), features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy())
+    #     # assert False
+    #     # print imgs.size()
+    # # assert False
+    # for phase in ['train', 'val']:
+    #     i3d.train(False)  # Set model to evaluate mode
+    #
+    #     tot_loss = 0.0
+    #     tot_loc_loss = 0.0
+    #     tot_cls_loss = 0.0
+    #
+    #     # Iterate over data.
+    #     for data in dataloaders[phase]:
+    #         # get the inputs
+    #         inputs, labels, name = data
+    #         if os.path.exists(os.path.join(save_dir, name[0] + '.npy')):
+    #             continue
+    #
+    #         b, c, t, h, w = inputs.shape
+    #         if t > 1600:
+    #             features = []
+    #             for start in range(1, t - 56, 1600):
+    #                 end = min(t - 1, start + 1600 + 56)
+    #                 start = max(1, start - 48)
+    #                 ip = Variable(torch.from_numpy(inputs.numpy()[:, :, start:end]).cuda(), volatile=True)
+    #                 features.append(i3d.extract_features(ip).squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy())
+    #             np.save(os.path.join(save_dir, name[0]), np.concatenate(features, axis=0))
+    #         else:
+    #             # wrap them in Variable
+    #             inputs = Variable(inputs.cuda(), volatile=True)
+    #             features = i3d.extract_features(inputs)
+    #             np.save(os.path.join(save_dir, name[0]), features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy())
