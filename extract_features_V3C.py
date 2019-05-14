@@ -42,6 +42,8 @@ from V3C_dataset import V3C as Dataset
 
 if __name__ == '__main__':
     batch_size = 1
+    mode = args.mode
+    device = torch.device('cuda:{}'.format(args.device))
 
     # setup dataset
     test_transforms = transforms.Compose([videotransforms.CenterCrop(224)])
@@ -50,35 +52,27 @@ if __name__ == '__main__':
         lines = fr.readlines()
         for line in lines:
             video_lst.append(line.rstrip('\r\n'))
-    print video_lst[:10]
-    assert False
-
-
-    dataset = Dataset(split, 'training', root, mode, test_transforms, num=-1, save_dir=save_dir)
+    imgs_root = '/mnt/sda/tmp'
+    dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
+                      mode=mode, transforms=test_transforms)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=8,
                                              pin_memory=True)
 
-
-    # dataset = Dataset(split, 'training', root, mode, test_transforms, num=-1, save_dir=save_dir)
-    # dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=8,
-    #                                          pin_memory=True)
-
-    val_dataset = Dataset(split, 'testing', root, mode, test_transforms, num=-1, save_dir=save_dir)
-    val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=8,
-                                                 pin_memory=True)
-
-    dataloaders = {'train': dataloader, 'val': val_dataloader}
-    datasets = {'train': dataset, 'val': val_dataset}
-
-    # setup the model
     if mode == 'flow':
         i3d = InceptionI3d(400, in_channels=2)
     else:
         i3d = InceptionI3d(400, in_channels=3)
-    i3d.replace_logits(157)
-    i3d.load_state_dict(torch.load(load_model))
-    i3d.cuda()
 
+    model_path = './models/rgb_charades.pt'
+    i3d.replace_logits(157)
+    i3d.load_state_dict(torch.load(model_path))
+    i3d.to(device)
+    i3d.eval()
+
+    for index, imgs in enumerate(dataloader):
+        imgs = imgs.to(device)
+        print imgs.size()
+    assert False
     for phase in ['train', 'val']:
         i3d.train(False)  # Set model to evaluate mode
 
