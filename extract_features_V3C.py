@@ -140,19 +140,19 @@ if __name__ == '__main__':
                 buffer_counter = 0
                 frames.append(frame)
                 buffer_counter += 1
-        # if len(frames) != 0:
-        #     print 'remaining frames: {}'.format(len(frames))
-        #     imgs = np.asarray(frames, dtype=np.float32)
-        #     imgs = crop_frames(imgs, crop_size)
-        #     inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
-        #     inputs = inputs.unsqueeze(0)
-        #     buffer_feats = i3d.extract_features(inputs)
-        #     print buffer_feats.size()
-        #     buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        #     features.append(buffer_feats)
+        if len(frames) != 0:
+            print 'remaining frames: {}'.format(len(frames))
+            imgs = np.asarray(frames, dtype=np.float32)
+            imgs = crop_frames(imgs, crop_size)
+            inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+            inputs = inputs.unsqueeze(0)
+            buffer_feats = i3d.extract_features(inputs)
+            print buffer_feats.size()
+            buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+            features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features
+        first_feats = features[0]
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
         features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        second_feats = features
+        second_feats = features[0]
         print features.shape
         print np.amax(first_feats-second_feats)
     #     # assert False
