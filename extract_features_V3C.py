@@ -152,7 +152,7 @@ if __name__ == '__main__':
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features
+        first_feats = features[0]
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
@@ -205,7 +205,7 @@ if __name__ == '__main__':
                 features.append(buffer_feats)
             features = np.concatenate(features, axis=0)
             print features.shape
-            second_feats = features
+            second_feats = features[0]
             cmd = 'rm -rf {}'.format(img_folder_path)
             os.system(cmd)
             print np.amax(first_feats - second_feats)
