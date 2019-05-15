@@ -151,8 +151,7 @@ if __name__ == '__main__':
 
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=3,
-                                                 pin_memory=True)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=3)
         for imgs in dataloader:
             inputs = imgs.to(device)
             # print inputs.size()
