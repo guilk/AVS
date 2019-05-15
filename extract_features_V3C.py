@@ -155,10 +155,9 @@ if __name__ == '__main__':
             buffer_feats = i3d.extract_features(inputs)
             print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-            print buffer_feats.size()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
-        print frame_count, features.size()
+        print frame_count, features.shape
 
     # for index, imgs in enumerate(dataloader):
     #     # print imgs.size()
