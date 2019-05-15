@@ -152,7 +152,7 @@ if __name__ == '__main__':
                                                                               len(frame_names))
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=3)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1)
         for imgs in dataloader:
             inputs = imgs.to(device)
             # print inputs.size()
@@ -167,7 +167,6 @@ if __name__ == '__main__':
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
         ave_feat = np.mean(features, axis=0)
-
         np.save(dst_path, ave_feat)
         # assert False
         #     # if os.path.exists(os.path.join(save_dir, name[0]+'.npy')):
