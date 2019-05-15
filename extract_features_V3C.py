@@ -147,6 +147,9 @@ if __name__ == '__main__':
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
 
+        cmd = 'rm -rf {}'.format(img_folder_path)
+        os.system(cmd)
+
             # for video_path in video_lst:
     #     # load video
     #     try:
