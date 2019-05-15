@@ -149,15 +149,17 @@ if __name__ == '__main__':
             buffer_feats = i3d.extract_features(inputs)
             print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+            first_feats = buffer_feats[0]
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features[0]
+        # first_feats = features[0]
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
 
         buffer_size = 128
+        second_feats = []
         for video_path in video_lst:
             video_name = video_path.split('/')[-1]
             # imgs_path = os.path.join(imgs_root, video_name)
@@ -187,6 +189,7 @@ if __name__ == '__main__':
                     buffer_feats = i3d.extract_features(inputs)
                     print buffer_feats.size()
                     buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+                    second_feats = buffer_feats[0]
                     features.append(buffer_feats)
 
                     frames = []
@@ -205,7 +208,7 @@ if __name__ == '__main__':
                 features.append(buffer_feats)
             features = np.concatenate(features, axis=0)
             print features.shape
-            second_feats = features[0]
+            # second_feats = features[0]
             cmd = 'rm -rf {}'.format(img_folder_path)
             os.system(cmd)
             print np.amax(first_feats - second_feats)
