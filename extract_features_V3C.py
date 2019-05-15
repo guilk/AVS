@@ -137,13 +137,13 @@ if __name__ == '__main__':
         features = []
         frames = []
         frame_names = [str(frame_index+1).zfill(6) + '.jpg' for frame_index in range(num_frames)]
+        print 'Process {}th of {} videos, {} frames'.format(index, len(video_lst), len(frame_names))
         while len(frame_names) % buffer_size != 0:
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
         # if len(frame_names) % buffer_size != 0:
         #     rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
         #     frame_names += rotate_frames
-        print 'Process {}th of {} videos, {} frames'.format(index, len(video_lst), len(frame_names))
         # feat_start = time.time()
 
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
