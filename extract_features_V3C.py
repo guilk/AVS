@@ -133,6 +133,7 @@ if __name__ == '__main__':
                 imgs = np.asarray(frames, dtype=np.float32)
                 imgs = crop_frames(imgs, crop_size)
                 inputs = torch.FloatTensor(imgs).to(device)
+                print inputs.size()
                 buffer_feats = i3d.extract_features(inputs)
                 buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
                 features.append(buffer_feats)
