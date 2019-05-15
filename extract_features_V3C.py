@@ -76,7 +76,7 @@ def crop_frames(imgs, crop_size):
 
 if __name__ == '__main__':
     batch_size = 1
-    buffer_size = 128
+    buffer_size = 300
     crop_size = 224
     mode = args.mode
     device = torch.device('cuda:{}'.format(args.device))
