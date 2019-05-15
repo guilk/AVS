@@ -76,7 +76,7 @@ def crop_frames(imgs, crop_size):
 
 if __name__ == '__main__':
     batch_size = 1
-    buffer_size = 128
+    buffer_size = 300
     crop_size = 224
     mode = args.mode
     device = torch.device('cuda:{}'.format(args.device))
@@ -147,7 +147,7 @@ if __name__ == '__main__':
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features[0]
+        first_feats = features
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
         features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        second_feats = features[0]
+        second_feats = features
         print features.shape
         print np.amax(first_feats-second_feats)
     #     # assert False
