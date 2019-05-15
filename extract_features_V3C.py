@@ -4,6 +4,7 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 import sys
 import argparse
 import cv2
+import time
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument('-mode', type=str, help='rgb or flow')
@@ -108,12 +109,17 @@ if __name__ == '__main__':
     for video_path in video_lst:
         video_name = video_path.split('/')[-1]
         # imgs_path = os.path.join(imgs_root, video_name)
+        decode_start = time.time()
         img_folder_path = os.path.join(imgs_root, video_name)
         if not os.path.exists(img_folder_path):
             os.makedirs(img_folder_path)
         cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path,
                                                                     os.path.join(img_folder_path, '%06d.jpg'))
         os.system(cmd)
+        decode_end = time.time()
+        print 'decoding time : {}'.format(decode_end - decode_start)
+
+        feat_start = time.time()
         num_frames = len(os.listdir(os.path.join(imgs_root, video_name)))
         cur_frame = 0
         buffer_counter = 0
@@ -144,7 +150,7 @@ if __name__ == '__main__':
                 frames.append(frame)
                 buffer_counter += 1
         if len(frames) != 0:
-            print 'remaining frames: {}'.format(len(frames))
+            # print 'remaining frames: {}'.format(len(frames))
             imgs = np.asarray(frames, dtype=np.float32)
             imgs = crop_frames(imgs, crop_size)
             inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
@@ -153,9 +159,11 @@ if __name__ == '__main__':
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
+        feat_end = time.time()
         print len(frame_names),features.shape
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
+        print 'extracting features : {}'.format(feat_end - feat_start)
 
         # for frame_index in range(num_frames):
         #     frame = cv2.imread(os.path.join(imgs_root, video_name,
