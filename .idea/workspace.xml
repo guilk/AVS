@@ -18,8 +18,8 @@
       <file leaf-file-name="extract_features_V3C.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="145" column="42" lean-forward="false" selection-start-line="145" selection-start-column="42" selection-end-line="145" selection-end-column="42" />
+            <state relative-caret-position="555">
+              <caret line="150" column="108" lean-forward="false" selection-start-line="150" selection-start-column="108" selection-end-line="150" selection-end-column="108" />
               <folding />
             </state>
           </provider>
@@ -28,7 +28,7 @@
       <file leaf-file-name="V3C_dataset.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
+            <state relative-caret-position="262">
               <caret line="31" column="39" lean-forward="true" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
               <folding />
             </state>
@@ -101,7 +101,6 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="FullScreen" value="true" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
@@ -378,7 +377,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V3C_dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
+        <state relative-caret-position="262">
           <caret line="31" column="39" lean-forward="true" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
           <folding />
         </state>
@@ -386,8 +385,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/extract_features_V3C.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="145" column="42" lean-forward="false" selection-start-line="145" selection-start-column="42" selection-end-line="145" selection-end-column="42" />
+        <state relative-caret-position="555">
+          <caret line="150" column="108" lean-forward="false" selection-start-line="150" selection-start-column="108" selection-end-line="150" selection-end-column="108" />
           <folding />
         </state>
       </provider>
