@@ -91,13 +91,13 @@ if __name__ == '__main__':
             video_lst.append(line.rstrip('\r\n'))
     imgs_root = '/mnt/sda/tmp'
 
-    start_time = time.time()
-    dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
-                      mode=mode, transforms=test_transforms)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
-                                             pin_memory=True)
-    end_time = time.time()
-    print 'making dataloader: {}'.format(end_time - start_time)
+    # start_time = time.time()
+    # dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
+    #                   mode=mode, transforms=test_transforms)
+    # dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
+    #                                          pin_memory=True)
+    # end_time = time.time()
+    # print 'making dataloader: {}'.format(end_time - start_time)
     if mode == 'flow':
         i3d = InceptionI3d(400, in_channels=2)
     else:
