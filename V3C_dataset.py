@@ -153,7 +153,7 @@ class V3C(data_utl.Dataset):
         os.system(cmd)
 
         num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
-        num_frames = 128
+        # num_frames = 128
         if self.mode == 'rgb':
             imgs = load_rgb_frames(self.imgs_root, video_name, 1, num_frames)
         else:

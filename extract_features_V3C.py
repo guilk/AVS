@@ -152,9 +152,63 @@ if __name__ == '__main__':
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features[0]
+        first_feats = features
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
+
+
+        buffer_size = 128
+        for video_path in video_lst:
+            video_name = video_path.split('/')[-1]
+            # imgs_path = os.path.join(imgs_root, video_name)
+            img_folder_path = os.path.join(imgs_root, video_name)
+            if not os.path.exists(img_folder_path):
+                os.makedirs(img_folder_path)
+            cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path,
+                                                                        os.path.join(img_folder_path, '%06d.jpg'))
+            os.system(cmd)
+            num_frames = len(os.listdir(os.path.join(imgs_root, video_name)))
+            cur_frame = 0
+            buffer_counter = 0
+            features = []
+            frames = []
+            for frame_index in range(num_frames):
+                frame = cv2.imread(os.path.join(imgs_root, video_name,
+                                                str(frame_index + 1).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+                frame = process_frame(frame)
+                if buffer_counter < buffer_size:
+                    frames.append(frame)
+                    buffer_counter += 1
+                else:
+                    imgs = np.asarray(frames, dtype=np.float32)
+                    imgs = crop_frames(imgs, crop_size)
+                    inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+                    inputs = inputs.unsqueeze(0)
+                    buffer_feats = i3d.extract_features(inputs)
+                    print buffer_feats.size()
+                    buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+                    features.append(buffer_feats)
+
+                    frames = []
+                    buffer_counter = 0
+                    frames.append(frame)
+                    buffer_counter += 1
+            if len(frames) != 0:
+                print 'remaining frames: {}'.format(len(frames))
+                imgs = np.asarray(frames, dtype=np.float32)
+                imgs = crop_frames(imgs, crop_size)
+                inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+                inputs = inputs.unsqueeze(0)
+                buffer_feats = i3d.extract_features(inputs)
+                print buffer_feats.size()
+                buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+                features.append(buffer_feats)
+            features = np.concatenate(features, axis=0)
+            print features.shape
+            second_feats = features
+            cmd = 'rm -rf {}'.format(img_folder_path)
+            os.system(cmd)
+            print np.amax(first_feats - second_feats)
 
             # for video_path in video_lst:
     #     # load video
@@ -210,14 +264,16 @@ if __name__ == '__main__':
     #     features = np.concatenate(features, axis=0)
     #     print frame_count, features.shape
 
-    for index, imgs in enumerate(dataloader):
-        # print imgs.size()
-        inputs = imgs.to(device)
-        features = i3d.extract_features(inputs)
-        features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        second_feats = features[0]
-        print features.shape
-        print np.amax(first_feats-second_feats)
+
+    # for index, imgs in enumerate(dataloader):
+    #     # print imgs.size()
+    #     inputs = imgs.to(device)
+    #     features = i3d.extract_features(inputs)
+    #     features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+    #     second_feats = features[0]
+    #     print features.shape
+    #     print np.amax(first_feats-second_feats)
+
     #     # assert False
     #     # print imgs.size()
     # # assert False
