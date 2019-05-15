@@ -3,6 +3,7 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 import sys
 import argparse
+import cv2
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument('-mode', type=str, help='rgb or flow')
@@ -40,8 +41,42 @@ from pytorch_i3d import InceptionI3d
 from V3C_dataset import V3C as Dataset
 
 
+
+def load_rgb_frames(image_dir, vid, start, num):
+    frames = []
+    for i in range(start, start + num):
+        img = cv2.imread(os.path.join(image_dir, vid, str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+        w, h, c = img.shape
+        if w < 226 or h < 226:
+            d = 226. - min(w, h)
+            sc = 1 + d / min(w, h)
+            img = cv2.resize(img, dsize=(0, 0), fx=sc, fy=sc)
+        img = (img / 255.) * 2 - 1
+        frames.append(img)
+    return np.asarray(frames, dtype=np.float32)
+
+def process_frame(img):
+    w, h, c = img.shape
+    if w < 226 or h < 226:
+        d = 226. - min(w, h)
+        sc = 1 + d / min(w, h)
+        img = cv2.resize(img, dsize=(0, 0), fx=sc, fy=sc)
+    img = (img / 255.) * 2 - 1
+    return img
+
+def crop_frames(imgs):
+    t, h, w, c = imgs.shape
+    th, tw = crop_size
+    i = int(np.round((h - th) / 2.))
+    j = int(np.round((w - tw) / 2.))
+    imgs = imgs[:, i:i + th, j:j + tw, :]
+    return imgs
+
+
 if __name__ == '__main__':
     batch_size = 1
+    buffer_size = 128
+    crop_size = 224
     mode = args.mode
     device = torch.device('cuda:{}'.format(args.device))
 
@@ -69,11 +104,58 @@ if __name__ == '__main__':
     i3d.to(device)
     i3d.eval()
 
-    for index, imgs in enumerate(dataloader):
-        print imgs.size()
-        inputs = imgs.to(device)
-        features = i3d.extract_features(inputs)
-        print features.size()
+    for video_path in video_lst:
+        # load video
+        try:
+            vcap = cv2.VideoCapture(video_path)
+            if not vcap.isOpened():
+                raise Exception("cannot open %s" % video_path)
+        except Exception as e:
+            raise e
+        frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
+        video_name = video_path.split('/')[-1]
+        cur_frame = 0
+        frames = []
+        buffer_counter = 0
+        features = []
+        while cur_frame < frame_count:
+            suc, frame = vcap.read()
+            if not suc:
+                cur_frame += 1
+                print 'Fail to load {}th frame of {}'.format(cur_frame, video_name)
+                continue
+            frame = process_frame(frame)
+
+            if buffer_counter < buffer_size:
+                frames.append(frame)
+                buffer_counter += 1
+            else:
+                imgs = np.asarray(frames, dtype=np.float32)
+                imgs = crop_frames(imgs)
+                inputs = torch.FloatTensor(imgs).to(device)
+                buffer_feats = i3d.extract_features(inputs)
+                buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+                features.append(buffer_feats)
+
+                frames = []
+                buffer_counter = 0
+
+            cur_frame += 1
+        if len(frames) != 0:
+            imgs = np.asarray(frames, dtype=np.float32)
+            imgs = crop_frames(imgs)
+            inputs = torch.FloatTensor(imgs).to(device)
+            buffer_feats = i3d.extract_features(inputs)
+            buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+            features.append(buffer_feats)
+        features = np.concatenate(features, axis=0)
+        print frame_count, features.size()
+
+    # for index, imgs in enumerate(dataloader):
+    #     print imgs.size()
+    #     inputs = imgs.to(device)
+    #     features = i3d.extract_features(inputs)
+    #     print features.size()
     #     # assert False
     #     # print imgs.size()
     # # assert False
