@@ -56,6 +56,7 @@ def load_rgb_frames(image_dir, vid, start, num):
     return np.asarray(frames, dtype=np.float32)
 
 def process_frame(img):
+    img = img[:, :, [2, 1, 0]]
     w, h, c = img.shape
     if w < 226 or h < 226:
         d = 226. - min(w, h)
@@ -104,62 +105,63 @@ if __name__ == '__main__':
     i3d.to(device)
     i3d.eval()
 
-    for video_path in video_lst:
-        # load video
-        try:
-            vcap = cv2.VideoCapture(video_path)
-            if not vcap.isOpened():
-                raise Exception("cannot open %s" % video_path)
-        except Exception as e:
-            raise e
-        frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
-        video_name = video_path.split('/')[-1]
-        cur_frame = 0
-        frames = []
-        buffer_counter = 0
-        features = []
-        while cur_frame < frame_count:
-            suc, frame = vcap.read()
-            if not suc:
-                cur_frame += 1
-                print 'Fail to load {}th frame of {}'.format(cur_frame, video_name)
-                continue
-            frame = process_frame(frame)
+    # for video_path in video_lst:
+    #     # load video
+    #     try:
+    #         vcap = cv2.VideoCapture(video_path)
+    #         if not vcap.isOpened():
+    #             raise Exception("cannot open %s" % video_path)
+    #     except Exception as e:
+    #         raise e
+    #     frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
+    #     video_name = video_path.split('/')[-1]
+    #     cur_frame = 0
+    #     frames = []
+    #     buffer_counter = 0
+    #     features = []
+    #     while cur_frame < frame_count:
+    #         suc, frame = vcap.read()
+    #         if not suc:
+    #             cur_frame += 1
+    #             print 'Fail to load {}th frame of {}'.format(cur_frame, video_name)
+    #             continue
+    #         frame = process_frame(frame)
+    #
+    #         if buffer_counter < buffer_size:
+    #             frames.append(frame)
+    #             buffer_counter += 1
+    #         else:
+    #             imgs = np.asarray(frames, dtype=np.float32)
+    #             imgs = crop_frames(imgs, crop_size)
+    #             inputs = torch.FloatTensor(imgs).to(device)
+    #             print inputs.size()
+    #             buffer_feats = i3d.extract_features(inputs)
+    #             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+    #             features.append(buffer_feats)
+    #
+    #             frames = []
+    #             buffer_counter = 0
+    #
+    #         cur_frame += 1
+    #     if len(frames) != 0:
+    #         imgs = np.asarray(frames, dtype=np.float32)
+    #         imgs = crop_frames(imgs, crop_size)
+    #         inputs = torch.FloatTensor(imgs).to(device)
+    #         print inputs.size()
+    #         buffer_feats = i3d.extract_features(inputs)
+    #         buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+    #         features.append(buffer_feats)
+    #     features = np.concatenate(features, axis=0)
+    #     print frame_count, features.size()
 
-            if buffer_counter < buffer_size:
-                frames.append(frame)
-                buffer_counter += 1
-            else:
-                imgs = np.asarray(frames, dtype=np.float32)
-                imgs = crop_frames(imgs, crop_size)
-                inputs = torch.FloatTensor(imgs).to(device)
-                print inputs.size()
-                buffer_feats = i3d.extract_features(inputs)
-                buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-                features.append(buffer_feats)
-
-                frames = []
-                buffer_counter = 0
-
-            cur_frame += 1
-        if len(frames) != 0:
-            imgs = np.asarray(frames, dtype=np.float32)
-            imgs = crop_frames(imgs, crop_size)
-            inputs = torch.FloatTensor(imgs).to(device)
-            print inputs.size()
-            buffer_feats = i3d.extract_features(inputs)
-            buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-            features.append(buffer_feats)
-        features = np.concatenate(features, axis=0)
-        print frame_count, features.size()
-
-    # for index, imgs in enumerate(dataloader):
-    #     print imgs.size()
-    #     inputs = imgs.to(device)
-    #     features = i3d.extract_features(inputs)
-    #     print features.size()
-    #     # assert False
-    #     # print imgs.size()
+    for index, imgs in enumerate(dataloader):
+        # print imgs.size()
+        inputs = imgs.to(device)
+        print inputs.size()
+        features = i3d.extract_features(inputs)
+        print features.size()
+        # assert False
+        # print imgs.size()
     # # assert False
     # for phase in ['train', 'val']:
     #     i3d.train(False)  # Set model to evaluate mode
