@@ -123,10 +123,9 @@ if __name__ == '__main__':
         if len(frame_names) % buffer_size != 0:
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
-        print frame_names
-        for frame_index in range(num_frames):
-            frame = cv2.imread(os.path.join(imgs_root, video_name,
-                                          str(frame_index+1).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+
+        for frame_name in range(num_frames):
+            frame = cv2.imread(os.path.join(imgs_root, video_name, frame_name))[:, :, [2, 1, 0]]
             frame = process_frame(frame)
             if buffer_counter < buffer_size:
                 frames.append(frame)
@@ -145,6 +144,7 @@ if __name__ == '__main__':
                 frames.append(frame)
                 buffer_counter += 1
         if len(frames) != 0:
+            print 'remaining frames: {}'.format(len(frames))
             imgs = np.asarray(frames, dtype=np.float32)
             imgs = crop_frames(imgs, crop_size)
             inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
@@ -153,8 +153,41 @@ if __name__ == '__main__':
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
+        print len(frame_names),features.shape
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
+
+        # for frame_index in range(num_frames):
+        #     frame = cv2.imread(os.path.join(imgs_root, video_name,
+        #                                   str(frame_index+1).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+        #     frame = process_frame(frame)
+        #     if buffer_counter < buffer_size:
+        #         frames.append(frame)
+        #         buffer_counter += 1
+        #     else:
+        #         imgs = np.asarray(frames, dtype=np.float32)
+        #         imgs = crop_frames(imgs, crop_size)
+        #         inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+        #         inputs = inputs.unsqueeze(0)
+        #         buffer_feats = i3d.extract_features(inputs)
+        #         buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+        #         features.append(buffer_feats)
+        #
+        #         frames = []
+        #         buffer_counter = 0
+        #         frames.append(frame)
+        #         buffer_counter += 1
+        # if len(frames) != 0:
+        #     imgs = np.asarray(frames, dtype=np.float32)
+        #     imgs = crop_frames(imgs, crop_size)
+        #     inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+        #     inputs = inputs.unsqueeze(0)
+        #     buffer_feats = i3d.extract_features(inputs)
+        #     buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+        #     features.append(buffer_feats)
+        # features = np.concatenate(features, axis=0)
+        # cmd = 'rm -rf {}'.format(img_folder_path)
+        # os.system(cmd)
 
 
         # buffer_size = 128
