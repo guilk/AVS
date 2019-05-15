@@ -146,7 +146,7 @@ if __name__ == '__main__':
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
-        print features.shape
+        print features
         first_feats = features[:27]
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
@@ -211,7 +211,7 @@ if __name__ == '__main__':
         features = i3d.extract_features(inputs)
         features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
         second_feats = features[:27]
-        print features.shape
+        print features
         print np.array_equal(first_feats, second_feats)
     #     # assert False
     #     # print imgs.size()
