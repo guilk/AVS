@@ -164,6 +164,7 @@ if __name__ == '__main__':
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
         ave_feat = np.mean(features, axis=0)
+        np.save('tmp.npy', ave_feat)
         print ave_feat.shape
         # print 'extracting features : {}'.format(feat_end - feat_start)
 
