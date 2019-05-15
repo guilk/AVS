@@ -124,7 +124,7 @@ if __name__ == '__main__':
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
 
-        for frame_name in range(num_frames):
+        for frame_name in frame_names:
             frame = cv2.imread(os.path.join(imgs_root, video_name, frame_name))[:, :, [2, 1, 0]]
             frame = process_frame(frame)
             if buffer_counter < buffer_size:
