@@ -83,18 +83,21 @@ if __name__ == '__main__':
     device = torch.device('cuda:{}'.format(args.device))
 
     # setup dataset
-    # test_transforms = transforms.Compose([videotransforms.CenterCrop(224)])
+    test_transforms = transforms.Compose([videotransforms.CenterCrop(224)])
     video_lst = []
     with open(args.video_lst, 'rb') as fr:
         lines = fr.readlines()
         for line in lines:
             video_lst.append(line.rstrip('\r\n'))
     imgs_root = '/mnt/sda/tmp'
-    # dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
-    #                   mode=mode, transforms=test_transforms)
-    # dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
-    #                                          pin_memory=True)
 
+    start_time = time.time()
+    dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
+                      mode=mode, transforms=test_transforms)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
+                                             pin_memory=True)
+    end_time = time.time()
+    print 'making dataloader: {}'.format(end_time - start_time)
     if mode == 'flow':
         i3d = InceptionI3d(400, in_channels=2)
     else:
