@@ -26,10 +26,10 @@ def video_to_tensor(pic):
     return torch.from_numpy(pic.transpose([3, 0, 1, 2]))
 
 
-def load_rgb_frames(image_dir, vid, start, num):
+def load_rgb_frames(image_dir, frame_names, start, num):
     frames = []
     for i in range(start, start + num):
-        img = cv2.imread(os.path.join(image_dir, vid, str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+        img = cv2.imread(os.path.join(image_dir, frame_names[i]))[:, :, [2, 1, 0]]
         w, h, c = img.shape
         if w < 226 or h < 226:
             d = 226. - min(w, h)
@@ -38,9 +38,37 @@ def load_rgb_frames(image_dir, vid, start, num):
         img = (img / 255.) * 2 - 1
         frames.append(img)
     return np.asarray(frames, dtype=np.float32)
+    # frames = []
+    # for i in range(start, start + num):
+    #     img = cv2.imread(os.path.join(image_dir, vid, vid + '-' + str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+    #     w, h, c = img.shape
+    #     if w < 226 or h < 226:
+    #         d = 226. - min(w, h)
+    #         sc = 1 + d / min(w, h)
+    #         img = cv2.resize(img, dsize=(0, 0), fx=sc, fy=sc)
+    #     img = (img / 255.) * 2 - 1
+    #     frames.append(img)
+    # return np.asarray(frames, dtype=np.float32)
 
-def load_flow_frames(imgage_dir, vid, start, num):
+
+def load_flow_frames(image_dir, vid, start, num):
     pass
+
+# def load_rgb_frames(image_dir, vid, start, num):
+#     frames = []
+#     for i in range(start, start + num):
+#         img = cv2.imread(os.path.join(image_dir, vid, str(i).zfill(6) + '.jpg'))[:, :, [2, 1, 0]]
+#         w, h, c = img.shape
+#         if w < 226 or h < 226:
+#             d = 226. - min(w, h)
+#             sc = 1 + d / min(w, h)
+#             img = cv2.resize(img, dsize=(0, 0), fx=sc, fy=sc)
+#         img = (img / 255.) * 2 - 1
+#         frames.append(img)
+#     return np.asarray(frames, dtype=np.float32)
+#
+# def load_flow_frames(imgage_dir, vid, start, num):
+#     pass
 
 # def load_flow_frames(image_dir, vid, start, num):
 #     frames = []
@@ -124,11 +152,47 @@ def load_flow_frames(imgage_dir, vid, start, num):
 #     def __len__(self):
 #         return len(self.data)
 
+# class V3C(data_utl.Dataset):
+#     def __init__(self, video_lst, imgs_root, mode, transforms=None):
+#
+#         # self.data = make_dataset(split_file, split, root, mode)
+#         self.data = video_lst
+#         self.transforms = transforms
+#         self.mode = mode
+#         self.imgs_root = imgs_root
+#
+#     def __getitem__(self, index):
+#         """
+#         Args:
+#             index (int): Index
+#
+#         Returns:
+#             tuple: (image, target) where target is class_index of the target class.
+#         """
+#
+#         video_path = self.data[index]
+#         video_name = video_path.split('/')[-1]
+#         # subfolder_name = video_path.split('/')[-2]
+#
+#         num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
+#         # num_frames = 128
+#         if self.mode == 'rgb':
+#             imgs = load_rgb_frames(self.imgs_root, video_name, 1, num_frames)
+#         else:
+#             imgs = load_flow_frames(self.imgs_root, video_name, 1, num_frames)
+#         imgs = self.transforms(imgs)
+#
+#         return video_to_tensor(imgs)
+#
+#     def __len__(self):
+#         return len(self.data)
+
 class V3C(data_utl.Dataset):
-    def __init__(self, video_lst, imgs_root, mode, transforms=None):
+    def __init__(self, frame_names, imgs_root, mode, transforms=None, buffer_size = 64):
 
         # self.data = make_dataset(split_file, split, root, mode)
-        self.data = video_lst
+        self.data = frame_names
+        self.buffer_size = buffer_size
         self.transforms = transforms
         self.mode = mode
         self.imgs_root = imgs_root
@@ -142,28 +206,19 @@ class V3C(data_utl.Dataset):
             tuple: (image, target) where target is class_index of the target class.
         """
 
-        video_path = self.data[index]
-        video_name = video_path.split('/')[-1]
+        # video_path = self.data[index*64]
+        start_index = index * self.buffer_size
+        # video_name = video_path.split('/')[-1]
         # subfolder_name = video_path.split('/')[-2]
 
-        img_folder_path = os.path.join(self.imgs_root, video_name)
-        if not os.path.exists(img_folder_path):
-            os.makedirs(img_folder_path)
-        cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path, os.path.join(img_folder_path, '%06d.jpg'))
-        os.system(cmd)
-
-        num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
+        # num_frames = len(os.listdir(os.path.join(self.imgs_root, video_name)))
         # num_frames = 128
         if self.mode == 'rgb':
-            imgs = load_rgb_frames(self.imgs_root, video_name, 1, num_frames)
+            imgs = load_rgb_frames(self.imgs_root, self.data, start_index, self.buffer_size)
         else:
-            imgs = load_flow_frames(self.imgs_root, video_name, 1, num_frames)
+            imgs = load_flow_frames(self.imgs_root, self.data, start_index, self.buffer_size)
         imgs = self.transforms(imgs)
-
-        cmd = 'rm -rf {}'.format(img_folder_path)
-        os.system(cmd)
-
         return video_to_tensor(imgs)
 
     def __len__(self):
-        return len(self.data)
+        return len(self.data)/self.buffer_size

@@ -108,7 +108,7 @@ if __name__ == '__main__':
     i3d.load_state_dict(torch.load(model_path))
     i3d.to(device)
     i3d.eval()
-    first_feats = []
+
     for video_path in video_lst:
         video_name = video_path.split('/')[-1]
         # imgs_path = os.path.join(imgs_root, video_name)
@@ -133,43 +133,125 @@ if __name__ == '__main__':
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
 
-        for frame_name in frame_names:
-            frame = cv2.imread(os.path.join(imgs_root, video_name, frame_name))[:, :, [2, 1, 0]]
-            frame = process_frame(frame)
-            if buffer_counter < buffer_size:
-                frames.append(frame)
-                buffer_counter += 1
-            else:
-                imgs = np.asarray(frames, dtype=np.float32)
-                imgs = crop_frames(imgs, crop_size)
-                inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
-                inputs = inputs.unsqueeze(0)
-                buffer_feats = i3d.extract_features(inputs)
-                buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-                features.append(buffer_feats)
+        dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
+                          mode=mode, transforms=test_transforms, buffer_size=buffer_size)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
+                                                 pin_memory=True)
 
-                frames = []
-                buffer_counter = 0
-                frames.append(frame)
-                buffer_counter += 1
-        if len(frames) != 0:
-            # print 'remaining frames: {}'.format(len(frames))
-            imgs = np.asarray(frames, dtype=np.float32)
-            imgs = crop_frames(imgs, crop_size)
-            inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
-            inputs = inputs.unsqueeze(0)
+
+        for imgs in dataloader:
+            inputs = imgs.to(device)
             buffer_feats = i3d.extract_features(inputs)
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
-        # feat_end = time.time()
-        # print len(frame_names),features.shape
+        print features.shape
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
-        ave_feat = np.mean(features, axis=0)
-        np.save('tmp.npy', ave_feat)
-        print ave_feat.shape
-        # print 'extracting features : {}'.format(feat_end - feat_start)
+
+        #     # if os.path.exists(os.path.join(save_dir, name[0]+'.npy')):
+        #     #     continue
+        # for frame_name in frame_names:
+        #     frame = cv2.imread(os.path.join(imgs_root, video_name, frame_name))[:, :, [2, 1, 0]]
+        #     frame = process_frame(frame)
+        #     if buffer_counter < buffer_size:
+        #         frames.append(frame)
+        #         buffer_counter += 1
+        #     else:
+        #         imgs = np.asarray(frames, dtype=np.float32)
+        #         imgs = crop_frames(imgs, crop_size)
+        #         inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+        #         inputs = inputs.unsqueeze(0)
+        #         buffer_feats = i3d.extract_features(inputs)
+        #         buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+        #         features.append(buffer_feats)
+        #
+        #         frames = []
+        #         buffer_counter = 0
+        #         frames.append(frame)
+        #         buffer_counter += 1
+        # if len(frames) != 0:
+        #     # print 'remaining frames: {}'.format(len(frames))
+        #     imgs = np.asarray(frames, dtype=np.float32)
+        #     imgs = crop_frames(imgs, crop_size)
+        #     inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+        #     inputs = inputs.unsqueeze(0)
+        #     buffer_feats = i3d.extract_features(inputs)
+        #     buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+        #     features.append(buffer_feats)
+        # features = np.concatenate(features, axis=0)
+        # # feat_end = time.time()
+        # # print len(frame_names),features.shape
+        # cmd = 'rm -rf {}'.format(img_folder_path)
+        # os.system(cmd)
+        # ave_feat = np.mean(features, axis=0)
+        # np.save('tmp.npy', ave_feat)
+        # print ave_feat.shape
+        # # print 'extracting features : {}'.format(feat_end - feat_start)
+
+
+
+    # for video_path in video_lst:
+    #     video_name = video_path.split('/')[-1]
+    #     # imgs_path = os.path.join(imgs_root, video_name)
+    #     # decode_start = time.time()
+    #     img_folder_path = os.path.join(imgs_root, video_name)
+    #     if not os.path.exists(img_folder_path):
+    #         os.makedirs(img_folder_path)
+    #     cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path,
+    #                                                                 os.path.join(img_folder_path, '%06d.jpg'))
+    #     os.system(cmd)
+    #     # decode_end = time.time()
+    #     # print 'decoding time : {}'.format(decode_end - decode_start)
+    #
+    #     feat_start = time.time()
+    #     num_frames = len(os.listdir(os.path.join(imgs_root, video_name)))
+    #     cur_frame = 0
+    #     buffer_counter = 0
+    #     features = []
+    #     frames = []
+    #     frame_names = [str(frame_index+1).zfill(6) + '.jpg' for frame_index in range(num_frames)]
+    #     if len(frame_names) % buffer_size != 0:
+    #         rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
+    #         frame_names += rotate_frames
+    #
+    #     for frame_name in frame_names:
+    #         frame = cv2.imread(os.path.join(imgs_root, video_name, frame_name))[:, :, [2, 1, 0]]
+    #         frame = process_frame(frame)
+    #         if buffer_counter < buffer_size:
+    #             frames.append(frame)
+    #             buffer_counter += 1
+    #         else:
+    #             imgs = np.asarray(frames, dtype=np.float32)
+    #             imgs = crop_frames(imgs, crop_size)
+    #             inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+    #             inputs = inputs.unsqueeze(0)
+    #             buffer_feats = i3d.extract_features(inputs)
+    #             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+    #             features.append(buffer_feats)
+    #
+    #             frames = []
+    #             buffer_counter = 0
+    #             frames.append(frame)
+    #             buffer_counter += 1
+    #     if len(frames) != 0:
+    #         # print 'remaining frames: {}'.format(len(frames))
+    #         imgs = np.asarray(frames, dtype=np.float32)
+    #         imgs = crop_frames(imgs, crop_size)
+    #         inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
+    #         inputs = inputs.unsqueeze(0)
+    #         buffer_feats = i3d.extract_features(inputs)
+    #         buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
+    #         features.append(buffer_feats)
+    #     features = np.concatenate(features, axis=0)
+    #     # feat_end = time.time()
+    #     # print len(frame_names),features.shape
+    #     cmd = 'rm -rf {}'.format(img_folder_path)
+    #     os.system(cmd)
+    #     ave_feat = np.mean(features, axis=0)
+    #     np.save('tmp.npy', ave_feat)
+    #     print ave_feat.shape
+    #     # print 'extracting features : {}'.format(feat_end - feat_start)
 
         # for frame_index in range(num_frames):
         #     frame = cv2.imread(os.path.join(imgs_root, video_name,
