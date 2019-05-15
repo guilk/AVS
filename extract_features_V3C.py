@@ -152,9 +152,9 @@ if __name__ == '__main__':
                                                  pin_memory=True)
         for imgs in dataloader:
             inputs = imgs.to(device)
-            print inputs.size()
+            # print inputs.size()
             buffer_feats = i3d.extract_features(inputs)
-            print buffer_feats.size()
+            # print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
         ave_feat = np.mean(features, axis=0)
         dst_path = os.path.join(video_feat_folder, feat_name)
         np.save(dst_path, ave_feat)
-        assert False
+        # assert False
         #     # if os.path.exists(os.path.join(save_dir, name[0]+'.npy')):
         #     #     continue
         # for frame_name in frame_names:
