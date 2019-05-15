@@ -64,9 +64,9 @@ def process_frame(img):
     img = (img / 255.) * 2 - 1
     return img
 
-def crop_frames(imgs):
+def crop_frames(imgs, crop_size):
     t, h, w, c = imgs.shape
-    th, tw = crop_size
+    th, tw = crop_size, crop_size
     i = int(np.round((h - th) / 2.))
     j = int(np.round((w - tw) / 2.))
     imgs = imgs[:, i:i + th, j:j + tw, :]
@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 buffer_counter += 1
             else:
                 imgs = np.asarray(frames, dtype=np.float32)
-                imgs = crop_frames(imgs)
+                imgs = crop_frames(imgs, crop_size)
                 inputs = torch.FloatTensor(imgs).to(device)
                 buffer_feats = i3d.extract_features(inputs)
                 buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
@@ -143,7 +143,7 @@ if __name__ == '__main__':
             cur_frame += 1
         if len(frames) != 0:
             imgs = np.asarray(frames, dtype=np.float32)
-            imgs = crop_frames(imgs)
+            imgs = crop_frames(imgs, crop_size)
             inputs = torch.FloatTensor(imgs).to(device)
             buffer_feats = i3d.extract_features(inputs)
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
