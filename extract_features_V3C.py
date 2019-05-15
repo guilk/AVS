@@ -83,17 +83,17 @@ if __name__ == '__main__':
     device = torch.device('cuda:{}'.format(args.device))
 
     # setup dataset
-    test_transforms = transforms.Compose([videotransforms.CenterCrop(224)])
+    # test_transforms = transforms.Compose([videotransforms.CenterCrop(224)])
     video_lst = []
     with open(args.video_lst, 'rb') as fr:
         lines = fr.readlines()
         for line in lines:
             video_lst.append(line.rstrip('\r\n'))
     imgs_root = '/mnt/sda/tmp'
-    dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
-                      mode=mode, transforms=test_transforms)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
-                                             pin_memory=True)
+    # dataset = Dataset(video_lst=video_lst, imgs_root=imgs_root,
+    #                   mode=mode, transforms=test_transforms)
+    # dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1,
+    #                                          pin_memory=True)
 
     if mode == 'flow':
         i3d = InceptionI3d(400, in_channels=2)
@@ -109,15 +109,15 @@ if __name__ == '__main__':
     for video_path in video_lst:
         video_name = video_path.split('/')[-1]
         # imgs_path = os.path.join(imgs_root, video_name)
-        decode_start = time.time()
+        # decode_start = time.time()
         img_folder_path = os.path.join(imgs_root, video_name)
         if not os.path.exists(img_folder_path):
             os.makedirs(img_folder_path)
         cmd = 'ffmpeg -i {} {} -hide_banner -loglevel panic'.format(video_path,
                                                                     os.path.join(img_folder_path, '%06d.jpg'))
         os.system(cmd)
-        decode_end = time.time()
-        print 'decoding time : {}'.format(decode_end - decode_start)
+        # decode_end = time.time()
+        # print 'decoding time : {}'.format(decode_end - decode_start)
 
         feat_start = time.time()
         num_frames = len(os.listdir(os.path.join(imgs_root, video_name)))
@@ -159,11 +159,13 @@ if __name__ == '__main__':
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
-        feat_end = time.time()
-        print len(frame_names),features.shape
+        # feat_end = time.time()
+        # print len(frame_names),features.shape
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
-        print 'extracting features : {}'.format(feat_end - feat_start)
+        ave_feat = np.mean(features, axis=0)
+        print ave_feat.shape
+        # print 'extracting features : {}'.format(feat_end - feat_start)
 
         # for frame_index in range(num_frames):
         #     frame = cv2.imread(os.path.join(imgs_root, video_name,
