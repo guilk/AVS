@@ -209,7 +209,7 @@ if __name__ == '__main__':
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
         features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        print features.size()
+        print features.shape
     #     # assert False
     #     # print imgs.size()
     # # assert False
