@@ -113,7 +113,7 @@ if __name__ == '__main__':
     i3d.eval()
 
     for index, video_path in enumerate(video_lst):
-        print 'Process {}th of {} videos'.format(index, len(video_lst))
+
         video_name = video_path.split('/')[-1]
         video_folder = video_path.split('/')[-2]
         video_feat_folder = os.path.join(feat_root, video_folder)
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         if len(frame_names) % buffer_size != 0:
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
-
+        print 'Process {}th of {} videos, {} frames'.format(index, len(video_lst), len(frame_names))
         # feat_start = time.time()
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
