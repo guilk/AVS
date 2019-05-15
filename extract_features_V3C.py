@@ -76,7 +76,7 @@ def crop_frames(imgs, crop_size):
 
 if __name__ == '__main__':
     batch_size = 1
-    buffer_size = 300
+    buffer_size = 128
     crop_size = 224
     mode = args.mode
     device = torch.device('cuda:{}'.format(args.device))
@@ -139,6 +139,7 @@ if __name__ == '__main__':
                 frames = []
                 buffer_counter = 0
         if len(frames) != 0:
+            print 'remaining frames: {}'.format(len(frames))
             imgs = np.asarray(frames, dtype=np.float32)
             imgs = crop_frames(imgs, crop_size)
             inputs = torch.from_numpy(imgs.transpose([3, 0, 1, 2])).to(device)
