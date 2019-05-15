@@ -138,6 +138,8 @@ if __name__ == '__main__':
 
                 frames = []
                 buffer_counter = 0
+                frames.append(frame)
+                buffer_counter += 1
         if len(frames) != 0:
             print 'remaining frames: {}'.format(len(frames))
             imgs = np.asarray(frames, dtype=np.float32)
