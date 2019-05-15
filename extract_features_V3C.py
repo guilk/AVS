@@ -120,6 +120,9 @@ if __name__ == '__main__':
         if not os.path.exists(video_feat_folder):
             os.makedirs(video_feat_folder)
         feat_name = video_name.split('.')[0]+'.npy'
+        dst_path = os.path.join(video_feat_folder, feat_name)
+        if os.path.exists(dst_path):
+            continue
         # imgs_path = os.path.join(imgs_root, video_name)
         # decode_start = time.time()
         img_folder_path = os.path.join(imgs_root, video_name)
@@ -164,7 +167,7 @@ if __name__ == '__main__':
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
         ave_feat = np.mean(features, axis=0)
-        dst_path = os.path.join(video_feat_folder, feat_name)
+
         np.save(dst_path, ave_feat)
         # assert False
         #     # if os.path.exists(os.path.join(save_dir, name[0]+'.npy')):
