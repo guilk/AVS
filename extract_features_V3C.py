@@ -136,7 +136,7 @@ if __name__ == '__main__':
         feat_start = time.time()
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4,
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=8,
                                                  pin_memory=True)
 
 
