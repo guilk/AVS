@@ -148,7 +148,9 @@ if __name__ == '__main__':
                                                  pin_memory=True)
         for imgs in dataloader:
             inputs = imgs.to(device)
+            print inputs.size()
             buffer_feats = i3d.extract_features(inputs)
+            print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
