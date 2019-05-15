@@ -140,7 +140,7 @@ if __name__ == '__main__':
         features = []
         frames = []
         frame_names = [str(frame_index+1).zfill(6) + '.jpg' for frame_index in range(num_frames)]
-        print 'Process {}th of {} videos, {} frames'.format(index, len(video_lst), len(frame_names))
+
         while len(frame_names) % buffer_size != 0:
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
@@ -148,7 +148,8 @@ if __name__ == '__main__':
         #     rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
         #     frame_names += rotate_frames
         # feat_start = time.time()
-
+        print 'Process {}th of {} videos, {} frames, padded {} frames'.format(index, len(video_lst), num_frames,
+                                                                              len(frame_names))
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=3)
