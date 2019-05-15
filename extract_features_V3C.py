@@ -145,6 +145,7 @@ if __name__ == '__main__':
         #     frame_names += rotate_frames
         print 'Process {}th of {} videos, {} frames'.format(index, len(video_lst), len(frame_names))
         # feat_start = time.time()
+
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4,
@@ -165,7 +166,7 @@ if __name__ == '__main__':
         ave_feat = np.mean(features, axis=0)
         dst_path = os.path.join(video_feat_folder, feat_name)
         np.save(dst_path, ave_feat)
-
+        assert False
         #     # if os.path.exists(os.path.join(save_dir, name[0]+'.npy')):
         #     #     continue
         # for frame_name in frame_names:
