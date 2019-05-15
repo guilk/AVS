@@ -147,7 +147,7 @@ if __name__ == '__main__':
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
         print features.shape
-        first_feats = features[:27]
+        first_feats = features[0]
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
 
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         inputs = imgs.to(device)
         features = i3d.extract_features(inputs)
         features = features.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
-        second_feats = features[:27]
+        second_feats = features[0]
         print features.shape
         print np.amax(first_feats-second_feats)
     #     # assert False
