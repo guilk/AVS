@@ -122,7 +122,7 @@ if __name__ == '__main__':
         # decode_end = time.time()
         # print 'decoding time : {}'.format(decode_end - decode_start)
 
-        feat_start = time.time()
+
         num_frames = len(os.listdir(os.path.join(imgs_root, video_name)))
         cur_frame = 0
         buffer_counter = 0
@@ -133,6 +133,7 @@ if __name__ == '__main__':
             rotate_frames = frame_names[:buffer_size - len(frame_names) % buffer_size]
             frame_names += rotate_frames
 
+        feat_start = time.time()
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4,
@@ -145,6 +146,8 @@ if __name__ == '__main__':
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
         features = np.concatenate(features, axis=0)
+        feat_end = time.time()
+        print 'extracting features : {}'.format(feat_end - feat_start)
         print features.shape
         cmd = 'rm -rf {}'.format(img_folder_path)
         os.system(cmd)
