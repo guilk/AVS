@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--device', type=int, default=0, help='cuda device id')
 parser.add_argument('--mode', type=str, default='rgb')
 parser.add_argument('--video_lst', type=str)
-parser.add_argument('--workers', type=int)
+parser.add_argument('--workers', type=int, default=1)
 # parser.add_argument()
 
 args = parser.parse_args()
