@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--device', type=int, default=0, help='cuda device id')
 parser.add_argument('--mode', type=str, default='rgb')
 parser.add_argument('--video_lst', type=str)
+parser.add_argument('--workers', type=int)
 # parser.add_argument()
 
 args = parser.parse_args()
@@ -152,7 +153,7 @@ if __name__ == '__main__':
                                                                               len(frame_names))
         dataset = Dataset(frame_names=frame_names, imgs_root=img_folder_path,
                           mode=mode, transforms=test_transforms, buffer_size=buffer_size)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=1)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.workers)
         for imgs in dataloader:
             inputs = imgs.to(device)
             # print inputs.size()
