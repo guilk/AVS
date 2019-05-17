@@ -8,39 +8,39 @@ if __name__ == '__main__':
 
     feat_root = '/mnt/sda/features'
 
-    video_lst = []
-
-    # 1082657 videos
-    counter = 0
-    for subfolder in subfolders:
-        subfolder_path = os.path.join(root_path, subfolder)
-        if not os.path.isdir(subfolder_path):
-            continue
-        videos = os.listdir(subfolder_path)
-        videos = [video for video in videos if (not video.startswith('._')) and video.endswith('.webm')]
-        for video_name in videos:
-
-            video_feat_folder = os.path.join(feat_root, subfolder)
-            feat_name = video_name.split('.')[0] + '.npy'
-            if os.path.exists(feat_name):
-                continue
-            dst_path = os.path.join(video_feat_folder, feat_name)
-            video_path = os.path.join(subfolder_path, video_name)
-            video_lst.append(video_path)
-            counter += 1
-            print video_path
-    print 'The number of videos is {}'.format(counter)
-
-    random.shuffle(video_lst)
-    num_splits = 7
-    seq_len = len(video_lst)/num_splits
-    split_names = ['first', 'second', 'third', 'forth', 'fifth', 'sixth', 'seventh']
-
-    for index in range(num_splits):
-        data_list = video_lst[index*seq_len:(index+1)*seq_len]
-        with open('./{}_split.txt'.format(split_names[index]), 'wb') as fw:
-            for video_path in data_list:
-                fw.write(video_path+'\n')
+    # video_lst = []
+    #
+    # # 1082657 videos
+    # counter = 0
+    # for subfolder in subfolders:
+    #     subfolder_path = os.path.join(root_path, subfolder)
+    #     if not os.path.isdir(subfolder_path):
+    #         continue
+    #     videos = os.listdir(subfolder_path)
+    #     videos = [video for video in videos if (not video.startswith('._')) and video.endswith('.webm')]
+    #     for video_name in videos:
+    #
+    #         video_feat_folder = os.path.join(feat_root, subfolder)
+    #         feat_name = video_name.split('.')[0] + '.npy'
+    #         if os.path.exists(feat_name):
+    #             continue
+    #         dst_path = os.path.join(video_feat_folder, feat_name)
+    #         video_path = os.path.join(subfolder_path, video_name)
+    #         video_lst.append(video_path)
+    #         counter += 1
+    #         print video_path
+    # print 'The number of videos is {}'.format(counter)
+    #
+    # random.shuffle(video_lst)
+    # num_splits = 7
+    # seq_len = len(video_lst)/num_splits
+    # split_names = ['first', 'second', 'third', 'forth', 'fifth', 'sixth', 'seventh']
+    #
+    # for index in range(num_splits):
+    #     data_list = video_lst[index*seq_len:(index+1)*seq_len]
+    #     with open('./{}_split.txt'.format(split_names[index]), 'wb') as fw:
+    #         for video_path in data_list:
+    #             fw.write(video_path+'\n')
 
 
     dst_root = '../subset_V3C'
