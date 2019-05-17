@@ -59,6 +59,8 @@ if __name__ == '__main__':
                 if not os.path.exists(folder_path):
                     os.makedirs(folder_path)
                 dst_path = os.path.join(folder_path, video_name)
+                if os.path.exists(dst_path):
+                    continue
                 cmd = 'scp {} {}'.format(src_path, dst_path)
                 print cmd
                 os.system(cmd)
