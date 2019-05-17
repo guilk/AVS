@@ -24,14 +24,23 @@ if __name__ == '__main__':
     print 'The number of videos is {}'.format(counter)
 
     random.shuffle(video_lst)
-    first_half = video_lst[:len(video_lst)/2]
-    second_half = video_lst[len(video_lst)/2:]
+    num_splits = 5
+    seq_len = len(video_lst)/num_splits
+    split_names = ['first', 'second', 'third', 'forth', 'fifth']
 
-    with open('./first_half.txt', 'wb') as fw:
-        for video_path in first_half:
-            fw.write(video_path+'\n')
-
-    with open('./second_half.txt', 'wb') as fw:
-        for video_path in second_half:
-            fw.write(video_path+'\n')
-    print '{},{}'.format(len(first_half), len(second_half))
+    for index in range(num_splits):
+        data_list = video_lst[index*seq_len:(index+1)*seq_len]
+        with open('./{}_split.txt'.format(split_names[index]), 'wb') as fw:
+            for video_path in data_list:
+                fw.write(video_path+'\n')
+    # first_half = video_lst[:len(video_lst)/3]
+    # second_half = video_lst[len(video_lst)/3:2*len(video_lst)/3]
+    #
+    # with open('./first_half.txt', 'wb') as fw:
+    #     for video_path in first_half:
+    #         fw.write(video_path+'\n')
+    #
+    # with open('./second_half.txt', 'wb') as fw:
+    #     for video_path in second_half:
+    #         fw.write(video_path+'\n')
+    # print '{},{}'.format(len(first_half), len(second_half))
