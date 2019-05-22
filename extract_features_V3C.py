@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--device', type=int, default=0, help='cuda device id')
 parser.add_argument('--mode', type=str, default='rgb')
 parser.add_argument('--video_lst', type=str)
+parser.add_argument('--data_root', type=str, default='/mnt/sda')
 parser.add_argument('--workers', type=int, default=1)
 # parser.add_argument()
 
@@ -90,8 +91,10 @@ if __name__ == '__main__':
         lines = fr.readlines()
         for line in lines:
             video_lst.append(line.rstrip('\r\n'))
-    imgs_root = '/mnt/sda/tmp'
-    feat_root = '/mnt/sda/features'
+    # imgs_root = '/mnt/sda/tmp'
+    imgs_root = os.path.join(args.data_root, 'tmp')
+    # feat_root = '/mnt/sda/features'
+    feat_root = os.path.join(args.data_root, 'features')
     if not os.path.exists(feat_root):
         os.makedirs(feat_root)
 
