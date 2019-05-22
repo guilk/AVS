@@ -156,13 +156,16 @@ if __name__ == '__main__':
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.workers)
         for imgs in dataloader:
             inputs = imgs.to(device)
-            print inputs.size()
+            # print inputs.size()
             # print inputs.size()
             buffer_feats = i3d.extract_features(inputs)
             # print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
-        print len(features)
+        if len(features) == 0:
+            cmd = 'rm -rf {}'.format(img_folder_path)
+            os.system(cmd)
+            continue
         features = np.concatenate(features, axis=0)
         # feat_end = time.time()
         # print 'extracting features : {}'.format(feat_end - feat_start)
