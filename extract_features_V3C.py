@@ -156,6 +156,7 @@ if __name__ == '__main__':
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.workers)
         for imgs in dataloader:
             inputs = imgs.to(device)
+            print inputs.size()
             # print inputs.size()
             buffer_feats = i3d.extract_features(inputs)
             # print buffer_feats.size()
