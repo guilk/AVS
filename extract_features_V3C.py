@@ -162,6 +162,7 @@ if __name__ == '__main__':
             # print buffer_feats.size()
             buffer_feats = buffer_feats.squeeze(0).permute(1, 2, 3, 0).data.cpu().numpy()
             features.append(buffer_feats)
+        print len(features)
         features = np.concatenate(features, axis=0)
         # feat_end = time.time()
         # print 'extracting features : {}'.format(feat_end - feat_start)
