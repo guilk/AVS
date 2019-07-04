@@ -4,7 +4,7 @@ import random
 
 if __name__ == '__main__':
 
-    root_path = '/mnt/extDisks/disk1/liangkeg/data/'
+    root_path = '/mnt/sda/AVS'
     videos = os.listdir(os.path.join(root_path, 'YouTubeClips'))
     fw = open('./msvd_data.txt', 'wb')
     for video_name in videos:
